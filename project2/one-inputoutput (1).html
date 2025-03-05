@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>alphaBETFLIX</title>
+    <style>
+        /* SOLID COLOR BACKGROUND */
+        body {
+            background: #000000; /* Default color */
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.5s ease-in-out;
+            color: white;
+        }
+
+        /* TITLE */
+        #title {
+            font-size: 60px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: color 0.5s ease-in-out;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        /* INPUT */
+        #charInput {
+            font-size: 20px;
+            padding: 10px;
+            width: 60px;
+            text-align: center;
+            border-radius: 10px;
+            outline: none;
+            font-weight: bold;
+            transition: background 0.5s ease-in-out, border 0.5s ease-in-out;
+            background: white;
+            border: 3px solid white;
+            color: black;
+        }
+
+        /* BUTTON */
+        #submitButton {
+            margin-top: 10px;
+            font-size: 18px;
+            padding: 12px 24px;
+            border: none;
+            background: none !important;
+            color: white !important;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+            outline: none !important;
+        }
+
+        #submitButton:hover {
+            transform: scale(1.1);
+        }
+
+        /* IMAGE */
+        #displayedImage {
+            display: none;
+            margin-top: 20px;
+            width: 250px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0px 10px 20px rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            transform: scale(0.8) rotate(0deg);
+            transition: opacity 0.6s ease-in-out, transform 0.8s ease-in-out;
+        }
+
+        #displayedImage.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1) rotate(2deg);
+        }
+    </style>
+</head>
+<body>
+    <h1 id="title">alphaBETFLIX</h1>
+    <input type="text" id="charInput" maxlength="1">
+    <button onclick="displayImage()" id="submitButton">Your Next Watch!</button>
+    <img id="displayedImage" src="" alt="Displayed Image">
+
+    <script>
+        const images = [
+            "https://play-lh.googleusercontent.com/IU9UwMch6jzw3P_H_OSm7adHIKD1nX53vO_qx8iNaMGrh1YAXx3EdPj-s8_SXDUv498C8WfoISKqVb2q4Tg=w240-h480-rw", //A
+            "https://m.media-amazon.com/images/I/61RH64Z+c3L._AC_UF894,1000_QL80_.jpg", //B
+            "https://m.media-amazon.com/images/M/MV5BNDAzMDQ5NjQ3M15BMl5BanBnXkFtZTYwMTg4NDg4._V1_.jpg", //C
+            "https://m.media-amazon.com/images/M/MV5BNDExNDllYzMtZjdmOS00NWMwLWJlY2EtMDk2ZjE5MmZiOWY5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", //D
+            "https://i.ebayimg.com/images/g/Q6cAAOSwzBdjG9Dv/s-l1200.jpg", //E
+
+           "https://images.justwatch.com/poster/191724540/s718/footnote.jpg",//F
+
+           "https://media.posterlounge.com/img/products/710000/702528/702528_poster.jpg", //G
+           "https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/Fe4AAOSw~p5jLTGm/$_57.JPG?set_id=880000500F", //H
+           "https://render.fineartamerica.com/images/rendered/default/poster/6/8/break/images/artworkimages/medium/3/inside-llewyn-davis-bo-kev.jpg", //I
+           "https://m.media-amazon.com/images/I/61SyV8e9jaL.jpg", //J
+           "https://m.media-amazon.com/images/I/71Wkv0+rqpL.jpg", //K
+           "https://m.media-amazon.com/images/I/61Wn+DqvCWL._AC_UF894,1000_QL80_.jpg", //L
+           "https://m.media-amazon.com/images/M/MV5BNGNmNjI0ZmMtMzI5MC00ZjUyLWFlZDEtYjUyMGZlN2E3N2E2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", //M
+           "https://m.media-amazon.com/images/M/MV5BNmYxOTAzZWYtOGI3Yi00ODc3LTk5ZjYtZTY0MzVkZTg3YmRiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", //N
+           "https://m.media-amazon.com/images/M/MV5BMTMyNTc1NzY5MV5BMl5BanBnXkFtZTcwNDM4NTQzMw@@._V1_.jpg", //O
+           "https://upload.wikimedia.org/wikipedia/en/5/5a/Pirates_AWE_Poster.jpg", //P
+           "https://m.media-amazon.com/images/M/MV5BYzYyMjAzN2YtYTJiNC00MDhhLWE0MmUtZTE0ZmUxODU3MzkyXkEyXkFqcGc@._V1_.jpg", //Q
+           "https://m.media-amazon.com/images/I/71mfMTs-52L.jpg", //R
+           "https://m.media-amazon.com/images/I/71zR7dYIjzL._AC_UF894,1000_QL80_.jpg", //S
+           "https://m.media-amazon.com/images/I/713kiC-8JhL.jpg", //T
+           "https://m.media-amazon.com/images/I/41CCZT5s5KL._AC_UF894,1000_QL80_.jpg", //U
+           "https://m.media-amazon.com/images/I/41o86vs5hVL._AC_UF894,1000_QL80_.jpg", //V
+           "https://render.fineartamerica.com/images/rendered/default/poster/5.5/8/break/images/artworkimages/medium/3/whiplash-movie-poster-maskinlesbart-store.jpg", //W
+           "https://m.media-amazon.com/images/I/51A0APtQX2L._AC_UF894,1000_QL80_.jpg", //X
+           "https://www.originalfilmart.com/cdn/shop/files/young_sherlock_holmes_1985_original_film_art_5000x.webp?v=1731609516", //Y
+           "https://m.media-amazon.com/images/M/MV5BMDRkZGI0YTctNWRiNy00MTFhLWE2NTQtM2Y3YTY0MTM0MGE0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"  //Z
+       ];
+
+        function getRandomColor() {
+            let letters = "0123456789ABCDEF";
+            let color = "#";
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function displayImage() {
+            const input = document.getElementById("charInput").value.toUpperCase();
+            const imgElement = document.getElementById("displayedImage");
+            const title = document.getElementById("title");
+            const button = document.getElementById("submitButton");
+            const inputField = document.getElementById("charInput");
+
+            if (!input.match(/[A-Z]/)) {
+                alert("Please enter a valid letter from A to Z.");
+                return;
+            }
+
+            const index = input.charCodeAt(0) - 65;
+            if (index >= 0 && index < images.length) {
+                imgElement.src = images[index];
+                imgElement.classList.add("show");
+            }
+
+            // Change the background color randomly
+            document.body.style.background = getRandomColor();
+        }
+    </script>
+</body>
+</html>
