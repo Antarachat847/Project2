@@ -125,4 +125,20 @@
             const input = document.getElementById("charInput").value.toUpperCase();
             const imgElement = document.getElementById("displayedImage");
 
-   
+            if (!input.match(/[A-Z]/)) {
+                alert("Please enter a valid letter from A to Z.");
+                return;
+            }
+
+            const index = input.charCodeAt(0) - 65;
+            if (index >= 0 && index < images.length) {
+                imgElement.src = images[index];
+                imgElement.classList.add("show");
+            }
+
+            // Change the background color randomly
+            document.body.style.background = getRandomColor();
+        }
+    </script>
+</body>
+</html>
